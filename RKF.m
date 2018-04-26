@@ -9,7 +9,7 @@ format long
     N1 = 0;
     N2 = 0;
     N3 = 0;
-    T = zeros(1,N1+1);
+    T = zeros(1,N1+1); %an array of zeros
     T(1,1) = time;
     W =  zeros(1, N2+1);
     W(1,1) = alpha;
@@ -20,12 +20,14 @@ format long
     while FLAG == 1
         
         %STEP 3
-        k1 = h*feval(f,T(1,N1+1),W(1,N2+1));
+        k1 = h*feval(f,T(1,N1+1),W(1,N2+1)); %feval = evalues function 
         k2 = h*feval(f,T(1,N1+1)+(1/4)*h, w+(1/4)*k1);
         k3 = h*feval(f,T(1,N1+1)+(3/8)*h, w+(3/32)*k1 + (9/32)*k2);
         k4 = h*feval(f, T(1,N1+1)+(12/13)*h, w+(1932/2197)*k1 - (7200/2197)*k2+(7296/2197)*k3);
         k5 = h*feval(f, T(1,N1+1)+h, w + (439/216)*k1-8*k2+(3680/513)*k3 - (845/4104)*k4);
         k6 = h*feval(f, T(1,N1+1)+h/2, w - (8/27)*k1 + 2*k2 - (3544/2565)*k3 +(1859/4104)*k4 -(11/40)*k5);
+        %STEP 4 
+        %Note: R=(1/h)|w_tilde_(i+1) - w_(i+1)| ~= |t_(i+1)(h)|
         R = (1/h)*abs((1/360)*k1 - (128/4275)*k3 - (2197/75240)*k4 + (1/50)*k5 + (2/55)*k6);
         N1 = N1 + 1;
         N2 = N2 + 1;
@@ -53,7 +55,7 @@ format long
           %  fprintf('START\nTime is %d, w is %d, h is %d\nEND\n \n \n \n \n',time,w,h);
         end
 %  STEP 8
-        delta = 0.84*(TOL/R)^(1/4);
+        delta = 0.84*((TOL/R)^(1/4));
 %  STEP 9
         if delta <= 0.1
             h = 0.1*h;  
@@ -75,17 +77,16 @@ format long
                                     
             else if h < hmin
                     FLAG = 0;
-                    fprintf('Minimum h has been exceeded');
+                    fprintf('Minimum h has been exceeded; procedure completed unsuccessfully.');
                 end
             end
         end
                                             N3 = N3 +1;
-                                            H(1,N3+1) = h;
+                                    
+                                            H(1,N3+1) = h; %What is going on with the counter?
     end
    % Debug and Final format 
     ti = [T'];
     %wi = [W'];
     TABLE = table(ti);
     R = TABLE
-
-  
